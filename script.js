@@ -14,6 +14,20 @@ const randomFunctions = {
     symbol:getRandomSymbol
 }
 
+clipboardEl.addEventListener('click', () => {
+    const textarea = document.createElement('textarea')
+    const password = resultEl.innerText
+
+    if (!password) {return}
+
+    textarea.value = password
+    document.body.appendChild(textarea)
+    textarea.select()
+    document.execCommand('copy')
+    textarea.remove()
+    alert('Password Copied!')
+})
+
 
 generateEl.addEventListener('click', () => {
     //+ changes the data type of length to number
@@ -31,6 +45,9 @@ function generatePassword(upper, lower, number, symbol, length) {
     let generatedPassword = ''
     const typesCount = upper + lower + number + symbol
     const typesArr = [{upper}, {lower}, {number}, {symbol}].filter(item => Object.values(item)[0])
+    console.log(typesArr)
+    // console.log(Object.values({upper})[0])
+    
     
   
 
@@ -41,10 +58,15 @@ function generatePassword(upper, lower, number, symbol, length) {
     for (i = 0; i < length; i += typesCount) {
         typesArr.forEach(type => {
             const funcName = Object.keys(type)[0]
+            // console.log(funcName)
+            // console.log(typeof(funcName))
             generatedPassword += randomFunctions[funcName]()
         });
     }
 
+    //shuffle the password order
+    generatedPassword = generatedPassword.split('').sort(function(){return 0.5-Math.random()}).join('');
+    
     const finalPassword = generatedPassword.slice(0, length)
     return finalPassword
 }
@@ -74,3 +96,4 @@ function getRandomSymbol() {
 }
 
 // console.log(getRandomLower(), getRandomUpper(), getRandomNumber(), getRandomSymbol())
+
